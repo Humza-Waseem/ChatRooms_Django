@@ -54,7 +54,9 @@ ROOT_URLCONF = "studdybuddy.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "templates",    ###########  here we have added the path to the templates directory. If we do not do this, Django will not be able to find the templates directory and will throw an error.   #############
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -121,3 +123,11 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+##########################   ADded manually by me  to serve static files #############################
+STATICFILES_DIRS = [
+    BASE_DIR / "static", # we add the files that are not private. and anyone can acess that.
+    
+]
