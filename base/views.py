@@ -17,15 +17,22 @@ def home(request):
 
     #!####### using render function to render the home.html page, we could have used HttpResponse() function to render the page, but it is not a good practice to use it, so we use render() function and render it to a html page
 
-    return render(request, 'home.html', {'rooms': rooms})   #  we passed the rooms named dictionary to the home.html page ..  The first 'rooms' is the variable name that we will use in the html page and the second 'rooms' is the dictionary name that we created above(the dictionary that we are passing on by render function to the home.html page)
+
+    return render(request, 'base/home.html', {'rooms': rooms})   #  we passed the rooms named dictionary to the home.html page ..  The first 'rooms' is the variable name that we will use in the html page and the second 'rooms' is the dictionary name that we created above(the dictionary that we are passing on by render function to the home.html page)
 
 
 def room(request,pk): 
-    context = {
-        "roomsHeading":"THis is the room page variable ",
-        'rooms': rooms
-    }
+    # context = {
+    #     "roomsHeading":"THis is the room page variable ",
+    #     'rooms': rooms
+    # }
+    for i in rooms:
+        if i['id'] == int(pk):
+            room = i
+            context = { 'room': room}
+
     return render(request, 'base/room.html',context)   ## using render function to render the room.html page
   
-
+def test(request):
+    return render(request, 'base/test.html')   ## using render function to render the test.html page
 

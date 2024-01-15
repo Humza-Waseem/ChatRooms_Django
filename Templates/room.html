@@ -1,14 +1,13 @@
 {% comment %} {% include "navbar.html" %} {% endcomment %}
-<h1>Room Template!!!!!! in base/room.html</h1>
-<h2>{{room.id}}. {{room.name}}</h2>
+<h2>Room Template!!!!!! in base/room.html</h2>
 
 {% comment %} <p><b>{{rooms}}<b></p > {% endcomment %}
 
-    {% comment %} <h2>List of Rooms in base/room.html : </h2> {% endcomment %}
-    {% comment %} <div>
+    <h2>List of Rooms in base/room.html : </h2>
+    <div>
       <h3>{%for room in rooms%} 
         <div>{{room.id}} <span> --- </span>{{room.name}} </div>
         {%endfor%}
       </h3>
 
-    </div> {% endcomment %}
+    </div>

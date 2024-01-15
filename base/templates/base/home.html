@@ -23,7 +23,10 @@
       <h2>List of Rooms in HOME : </h2>
       <div>
         <h3>{%for room in rooms%} 
-          <div>{{room.id}} <span> --- </span>{{room.name}} </div>
+          {% comment %} <div>{{room.id}} <span> --- </span> <a href= "/room/{{room.id}}">{{room.name}} </a></div>   {% endcomment %}
+          <div>{{room.id}} <span> --- </span> <a href= "{% url 'room' room.id%} ">{{room.name}} </a></div>  
+           {% comment %} here we are giving a unique url to every room and every room has a unique id  {% endcomment %}
+
           {%endfor%}
         </h3>
   
