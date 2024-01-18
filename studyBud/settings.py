@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "base.apps.BaseConfig", # we have added this app to the installed apps. This is the app that we have created.
     
 ]
 
@@ -57,7 +59,8 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.join(BASE_DIR, 'Templates'), os.path.join(BASE_DIR, 'base', 'templates'),
+            os.path.join(BASE_DIR, 'Templates')
+            # , os.path.join(BASE_DIR, 'base', 'templates'),
             
                ###########  here we have added the path to the templates directory. If we do not do this, Django will not be able to find the templates directory and will throw an error.   #############
         ],
