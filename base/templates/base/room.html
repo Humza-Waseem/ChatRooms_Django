@@ -1,10 +1,12 @@
 {% comment %} {% include "navbar.html" %} {% endcomment %}
 <h1>Room Template!!!!!! in base/room.html</h1>
 
-<small>@{{room.topic}}</small>
-<h2>{{room.id}}. {{room.name}}</h2>
-<small>@{{room.host.username}}</small>
 
+
+
+<small>@{{room.host}}</small>
+<h2>{{room.id}}. {{room.name}}</h2>
+<small>"{{room.topic}}"</small>
 {% comment %} <p><b>{{rooms}}<b></p > {% endcomment %}
 
     {% comment %} <h2>List of Rooms in base/room.html : </h2> {% endcomment %}

@@ -17,12 +17,16 @@
       <title>Home</title>
     </head>
     <body>
-      <h1>{% include "navbar.html" %}</h1>
+      <h4>{% include "navbar.html" %}</h4>
   
   
       <h2>List of Rooms in base/HOME : </h2>
+      <a href= "{% url 'create-room'%}">Create a Room</a><hr>
       <div>
         <h3>{%for room in rooms%} 
+          <p><small><a href= "{% url 'update-room' room.id %}">Update Room</a></small></p>
+          <p><small><a href= "{% url 'delete-room' room.id %}">Delete Room</a></small></p>
+
           <small> @{{room.host.username}}</small>   {% comment %} here we are printing the username of the host of the room {% endcomment %}
           {% comment %} <div>{{room.id}} <span> --- </span> <a href= "/room/{{room.id}}">{{room.name}} </a></div>   {% endcomment %}
           <div>{{room.id}} <span> --- </span> <a href= "{% url 'room' room.id%} ">{{room.name}} </a></div>  

@@ -20,11 +20,14 @@ class Room(models.Model):
 
     host = models.ForeignKey(User, on_delete =  models.SET_NULL, null = True)   # when the user is deleted then all its rooms are delete as well
     topic = models.ForeignKey(Topic, on_delete =  models.SET_NULL, null = True)   # when the user is deleted then all its rooms are delete as well
-    updated = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)  # auto_now will update the time whenever the room is updated
+    created = models.DateTimeField(auto_now_add=True)  # auto_now_add will update the time only when the room is created for the first time
 
     def __str__(self):
         return self.name
+    #DECLARING THE CLASS HERE THAT WILL BE USEFULL TO IMPLEMENT SOME OPERATIONS ON THE SPECIFIC MODULE
+    class Meta:
+        ordering = ['-updated','-created']   # here we are ordering the rooms according to the most recent updated and created room in the list..     The ( - ) sign means to update according to most recent....
 
 
 ##  This is the model for the message that we will be creating

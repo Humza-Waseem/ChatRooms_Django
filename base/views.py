@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import Room
+from .Forms import RoomForm
+
 
 
 
@@ -23,7 +25,7 @@ def home(request):
     return render(request, 'base/home.html', context    )   #  we passed the rooms named dictionary to the home.html page ..  The first 'rooms' is the variable name that we will use in the html page and the second 'rooms' is the dictionary name that we created above(the dictionary that we are passing on by render function to the home.html page)
 
 
-def room(request,pk): 
+def room(request,pk):     
     room = Room.objects.get(id = pk)
     # for i in rooms:
     #     if i['id'] == int(pk):
@@ -33,6 +35,36 @@ def room(request,pk):
 
     return render(request, 'base/room.html',context)   ## using render function to render the room.html page
   
-def test(request):
-    return render(request, 'base/test.html')   ## using render function to render the test.html page
 
+def CreateRoom(request):
+    form = RoomForm()   # This line creates an instance of the RoomForm class.
+    if request.method =='POST':   # This line checks if the HTTP request method is 'POST'
+        form = RoomForm(request.POST)  #  passing all the values into the form ,, adding the date to form
+        if form.is_valid():   # this check if all the form submitted values are valid
+            form.save()   ## saving the4 form
+            return redirect('home')    # here we redirect the user (who submit the form) to the listed Page(home) note that we are using the Name of the 'HOME' html file which we declared in the urls. 
+
+    context = {'form':form}
+    return render(request,'base/room_form.html',context)
+
+
+def UpdateRoom(request,pk):  # here we get the pk also to update the specific room
+    room = Room.objects.get(id = pk)  # getting the room with the specific id
+    form = RoomForm(instance= room)  # here we get the instance of the room that we want to update. THis will also show  the data of the room that we want to update in the form fields... so it would be easy for update keeping in view the previous data
+
+    if request.method == 'POST':
+        form = RoomForm(request.POST, instance= room)  # Updating the form according to the the room.  The instance=room tells the request to update the attributes.. if we do not do this then django will simply make another room with our updated values
+        if form.is_valid():
+            form.save()
+            return redirect('home')  # going back to the home page 
+    context = {'form':form}
+
+    return render(request,'base/room_form.html',context)
+
+def DeleteRoom(request,pk):
+    room = Room.objects.get(id = pk)
+    if request.method == 'POST':
+        room.delete()
+        return redirect('home')
+    context = {'obj':room}
+    return render(request,'base/delete.html',context)
