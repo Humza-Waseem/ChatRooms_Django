@@ -18,5 +18,10 @@
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li>
       </ul>
+      <Form  method="GET" action ="{% url 'home' %}"> {% comment %}  this is the form to search for rooms, we get the value of the input and send it to the home view {% endcomment %}
+
+
+        <input type="text" name="q" placeholder="Search"> {% comment %} here the user will type the name of the room he wants to search for which is "q" in the home view, we get 'q' from here and send it to the home view {% endcomment %}
+        </Form>
     </div>
   </nav>

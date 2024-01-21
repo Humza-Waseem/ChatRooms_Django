@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Room
+from .models import Room,Topic
 from .Forms import RoomForm
+from django.db.models import Q  # here we get Q because it will help us to insert query operations AND,OR,NOT
 
 
 
@@ -13,14 +14,19 @@ from .Forms import RoomForm
 #     {'id': 3, 'name': 'Frontend Development'},
 # ]
 def home(request):
-    # context = {
-    #     "homepage":"THis is the HOME page variable "
-    # }
-    # return render(request, 'home.html',context)   The context variable is used to pass the data from the views.py to the html page, we can pass the data in the form of dictionary, list, tuple, etc.
+    
+    q = request.GET.get('q') if( request.GET.get('q') != None) else ''  # getting the query from the search bar and if it is not there then set it to empty string
 
+   
+    # rooms = Room.objects.filter(topic__name__icontains=q) # this will only allow us to search for the topic name
+    rooms = Room.objects.filter(
+        Q(topic__name__icontains=q) | # filter if the q is in the topic name(q will be entered by user through SearchBar)
+        Q(name__icontains =q)   |      # OR   q entered by user through SEarchBar is included in the name of room
+        Q(description__icontains =q))    
+
+    topics = Topic.objects.all()
     #!####### using render function to render the home.html page, we could have used HttpResponse() function to render the page, but it is not a good practice to use it, so we use render() function and render it to a html page
-    rooms = Room.objects.all()
-    context = { 'rooms': rooms}
+    context = { 'rooms': rooms,'topics':topics}
 
     return render(request, 'base/home.html', context    )   #  we passed the rooms named dictionary to the home.html page ..  The first 'rooms' is the variable name that we will use in the html page and the second 'rooms' is the dictionary name that we created above(the dictionary that we are passing on by render function to the home.html page)
 
@@ -62,9 +68,9 @@ def UpdateRoom(request,pk):  # here we get the pk also to update the specific ro
     return render(request,'base/room_form.html',context)
 
 def DeleteRoom(request,pk):
-    room = Room.objects.get(id = pk)
-    if request.method == 'POST':
-        room.delete()
-        return redirect('home')
-    context = {'obj':room}
+    room = Room.objects.get(id = pk)   # getting the specific room 
+    if request.method == 'POST': # if the method is to POST (form is filled)then
+        room.delete()    # delete the room 
+        return redirect('home')   # redirect the user to home. after deleting the room 
+    context = {'obj':room}  # using obj instead of "room" because we will use obj in our template to show a delete message also if the message isn't about the room 
     return render(request,'base/delete.html',context)

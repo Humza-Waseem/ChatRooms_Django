@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 ##  This is the model for the topic that we will be creating
 class Topic(models.Model):
-    name = models.TextField(max_length=150)    
+    name = models.TextField(max_length=100)    
    
     def __str__(self):
         return self.name
