@@ -1,0 +1,16 @@
+{% include "main.html" %}
+
+<div> 
+    <form method = "POST" action ="">
+        {% csrf_token %}
+        <label>UserName:</label>
+        <input type = "text" name="username" placeholder = "Enter Username"/>
+        <label>Password:</label>
+        <input type = "password" name="password" placeholder = "Enter Password"/>
+        
+        <input type ="submit" name = "Login">
+        
+</div>
+<div>
+    <a href = "register">Register</a>
+</div>

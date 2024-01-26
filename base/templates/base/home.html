@@ -3,7 +3,6 @@
   {{homepage}}</h2> {% endcomment %}
 
 
-
   <!doctype html>
   <html lang="en">
     <head>
@@ -27,6 +26,12 @@
 
       <h5>{% include "navbar.html" %}</h5>
       <hr>
+      {% if request.user.is_authenticated%}
+          <a href = {% url 'UserLogout' %} >LogOut</a>
+      {%else%}
+          <a href = {% url 'UserLogin' %} >LogIN</a>
+      {%endif%}
+
 
      <div class ="mainbody">
 
@@ -54,8 +59,10 @@
         <a href= "{% url 'create-room'%}">Create a Room</a>
 
         <h3>{%for room in rooms%} 
-          <p><small><a href= "{% url 'update-room' room.id %}">Update Room</a></small></p>
+          {%if request.user == room.host.username %}
+          <p><small><a href= "{% url 'update-room' room.id %}">Edit</a></small></p>
           <p><small><a href= "{% url 'delete-room' room.id %}">Delete Room</a></small></p>
+          {%endif%}
 
           <small> @{{room.host.username}}</small>   {% comment %} here we are printing the username of the host of the room {% endcomment %}
           {% comment %} <div>{{room.id}} <span> --- </span> <a href= "/room/{{room.id}}">{{room.name}} </a></div>   {% endcomment %}
