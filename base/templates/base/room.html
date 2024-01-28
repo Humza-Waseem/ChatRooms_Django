@@ -3,17 +3,40 @@
 
 
 
+<div class = "RoomInfoBox">
 
-<small>@{{room.host}}</small>
-<h2>{{room.id}}. {{room.name}}</h2>
-<small>"{{room.topic}}"</small>
-{% comment %} <p><b>{{rooms}}<b></p > {% endcomment %}
+     <small>@{{room.host}}</small>
+     <h2>{{room.id}}. {{room.name}}</h2>
+     <p>{{room.description}}</p>
+     <small>Topic: "{{room.topic}}"</small>
 
-    {% comment %} <h2>List of Rooms in base/room.html : </h2> {% endcomment %}
-    {% comment %} <div>
-      <h3>{%for room in rooms%} 
-        <div>{{room.id}} <span> --- </span>{{room.name}} </div>
-        {%endfor%}
-      </h3>
+ </div>
 
-    </div> {% endcomment %}
+
+<hr>
+<h3>CHAT: </h3>
+
+
+<div class = "conversationBox">
+      {% for message in messages %}
+      <small>@{{message.user}} {{message.created|timesince}} ago</small>
+      <p>{{message.body}}</p>
+      <hr>
+      {% endfor %}
+</div>
+
+
+
+
+{% if request.user.is_authenticated%}  {% comment %} # if user is authenticated then only show the message box {% endcomment %}
+<div class = "messageBox">
+  
+  <form method = "POST" action = "">
+      {% csrf_token %}
+      <input type="text" name="body" placeholder="Write Your Message here.......">
+      <br>
+      {% comment %} <input type="submit" value="Send"> {% endcomment %}
+  </form>
+
+</div>
+{% endif %}

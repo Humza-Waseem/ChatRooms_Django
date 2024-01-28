@@ -5,6 +5,7 @@ from django.contrib import messages  # importing the flash messages
 from .Forms import RoomForm  
 from django.contrib.auth import authenticate,login,logout  
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q  # here we get Q because it will help us to insert query operations AND,OR,NOT
 
@@ -14,12 +15,30 @@ def UserLogout(request):  # creating this view to so that
     logout(request)   # user presses the logout button then its session will be deleted from the database
     return redirect('home')   # and the user is redirected to the home page..
 
+def registerUser(request):
+    # page = 'register' 
+    form = UserCreationForm()
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request,user)
+            return redirect('home')
+        else:
+            messages.error(request,'An error occured during registration')
+
+    return render(request,'base/UserLogin.html',{'form':form})
+
+
 def UserLogin(request):
+    page  = 'login'
     if request.user.is_authenticated: # if a authenticated user try to manually enter "/login" in the browser then we will restrict the Login page
         return redirect('home') # and rediredct the user to the home page because uer is already logged in
     
     if request.method == "POST":  
-        username = request.POST.get('username') # getting the username from the login form
+        username = request.POST.get('username').lower() # getting the username from the login form in lowercase
         password = request.POST.get('password')  # getting the password from the login form
         
         try:
@@ -34,7 +53,7 @@ def UserLogin(request):
         else:
             messages.error(request,"Username or Password is incorrect")
 
-    context={}
+    context={'page':page}
     return render(request,'base/UserLogin.html',context)
 
 # rooms = [
@@ -62,21 +81,24 @@ def home(request):
 
 def room(request,pk):     
     room = Room.objects.get(id = pk)
+    UserMessages = room.message_set.all().order_by('-created')  # getting all the messages of the room and ordering them according to the most recent message
+
     # for i in rooms:
     #     if i['id'] == int(pk):
     #         room = i
-    context = { 'room': room}
+    context = { 'room': room,'messages':UserMessages}
     
 
     return render(request, 'base/room.html',context)   ## using render function to render the room.html page
   
-@login_required(login_url="UserLogin")   
+
+@login_required(login_url="UserLogin")     # login will be required to access this page
 def CreateRoom(request):
     form = RoomForm()   # This line creates an instance of the RoomForm class.
     if request.method =='POST':   # This line checks if the HTTP request method is 'POST'
         form = RoomForm(request.POST)  #  passing all the values into the form ,, adding the date to form
         if form.is_valid():   # this check if all the form submitted values are valid
-            form.save()   ## saving the4 form
+            form.save()   ## saving the form
             return redirect('home')    # here we redirect the user (who submit the form) to the listed Page(home) note that we are using the Name of the 'HOME' html file which we declared in the urls. 
 
     context = {'form':form}
