@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Room,Topic   # importing the Room and Topic models from models which is in the same directory
+from .models import Room,Topic,Message   # importing the Room and Topic and Message models from models which is in the same directory
 from django.contrib import messages  # importing the flash messages 
 from .Forms import RoomForm  
 from django.contrib.auth import authenticate,login,logout  
@@ -68,25 +68,51 @@ def home(request):
 
    
     # rooms = Room.objects.filter(topic__name__icontains=q) # this will only allow us to search for the topic name
-    rooms = Room.objects.filter(
-        Q(topic__name__icontains=q) | # filter if the q is in the topic name(q will be entered by user through SearchBar)
-        Q(name__icontains =q)   |      # OR   q entered by user through SEarchBar is included in the name of room
-        Q(description__icontains =q))    
+
+    rooms = Room.objects.filter(    
+        Q(topic__name__icontains=q) | # filter if the q is in the topic name OR Name of room OR in the Description(q will be entered by user through SearchBar)
+        Q(name__icontains =q)  |
+        Q(description__icontains =q))   
+     # if we do not give anything in the search bar then it will show all the rooms and the  filter will not be applied
 
     topics = Topic.objects.all()
-    context = { 'rooms': rooms,'topics':topics}
+    UserMessages = Message.objects.filter(  Q(room__topic__name__icontains = q))  # filtering the messages according to the topic name
+
+    context = { 'rooms': rooms,'topics':topics,'UserMessages':UserMessages}
 
     return render(request, 'base/home.html', context    )   #  we passed the rooms named dictionary to the home.html page ..  The first 'rooms' is the variable name that we will use in the html page and the second 'rooms' is the dictionary name that we created above(the dictionary that we are passing on by render function to the home.html page)
 
+@login_required(login_url="UserLogin") 
+def userProfile(request,pk):
+    user = User.objects.get(id = pk)
+    rooms = user.room_set.all()  # getting all the rooms of the user
+    topics = Topic.objects.all()
+    UserMessages = user.message_set.all()
+
+    context = {"user": user,"rooms":rooms , "topics":topics , "UserMessages":UserMessages}
+    return render(request,'base/userProfile.html',context)
 
 def room(request,pk):     
     room = Room.objects.get(id = pk)
-    UserMessages = room.message_set.all().order_by('-created')  # getting all the messages of the room and ordering them according to the most recent message
+    UserMessages = room.message_set.all()  # getting all the messages of the room and ordering them according to the most recent message  ( It is a "1 to many relationship" so we can use the message_set to get all the messages of the room)
+    participants = room.participants.all()  # getting all the participants of the room
+
+    # Form for sending the message in the room.html page
+    if(request.method == 'POST'):     # if the method in the form is POST then
+        message = Message.objects.create(    # creating the message object
+        user= request.user,                  # the user will be the user who is logged in
+        room = room,                         # the room will be the room in which the message is sent
+        body = request.POST.get('body') # the actual message is one which is entered by the user in the field which is named as 'body' in the FormField of the room.html page
+        )
+        room.participants.add(request.user)  # adding the user who has sent the message to the participants of room
+
+        return redirect('room',pk=room.id)   # redirecting the user to the same room after sending the message.. This will refresh the page and the message will be shown in the room.html page
+    
 
     # for i in rooms:
     #     if i['id'] == int(pk):
     #         room = i
-    context = { 'room': room,'messages':UserMessages}
+    context = { 'room': room,'messages':UserMessages,'participants':participants}
     
 
     return render(request, 'base/room.html',context)   ## using render function to render the room.html page
@@ -128,5 +154,20 @@ def DeleteRoom(request,pk):
         room.delete()    # delete the room 
         return redirect('home')   # redirect the user to home. after deleting the room 
     context = {'obj':room}  # using obj instead of "room" because we will use obj in our template to show a delete message also if the message isn't about the room 
+    
+    return render(request,'base/delete.html',context)
+
+@login_required(login_url="UserLogin")
+def DeleteMessage(request,pk):
+    messages = Message.objects.get(id = pk)   
+
+    if( request.user != messages.user ): 
+        return HttpResponse("You are not allowed to delete this message")
+
+    if request.method == 'POST': 
+        messages.delete()
+        return redirect('room',pk=messages.room.id)   # redirecting the user to the same room after deleting the message
+    
+    context = {'obj':messages} 
     
     return render(request,'base/delete.html',context)

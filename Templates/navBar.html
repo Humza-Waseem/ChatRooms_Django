@@ -23,5 +23,8 @@
 
         <input type="text" name="q" placeholder="Search"> {% comment %} here the user will type the name of the room he wants to search for which is "q" in the home view, we get 'q' from here and send it to the home view {% endcomment %}
         </Form>
+      {% comment %} {% if request.user is authenticated%}
+      {% comment %} {% if request.user.username = room.host.username%} {% endcomment %}
+      {% comment %} <a href = "{% url 'UserProfile' user.id%}">Profile</a> {% endcomment %} 
     </div>
   </nav>

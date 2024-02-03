@@ -16,9 +16,10 @@ class Topic(models.Model):
 class Room(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(null = True, blank = True)   #  setting to null means that it will be blank in the database if not filled out at runtime otherwise the data basebase will consider it as missing data   # blank means that it is not required to be filled out at runtime 
-    # participants =
 
-    host = models.ForeignKey(User, on_delete =  models.SET_NULL, null = True)   # when the user is deleted then all its rooms are delete as well
+    participants = models.ManyToManyField(User, related_name = 'participants', blank = True)  # this is the many to many field that we will be using to connect the room with the user, related_name is used to access the participants of the room from the user model, blank means that it is not required to be filled out at runtime
+
+    host = models.ForeignKey(User, on_delete =  models.SET_NULL, null = True)   # when the host is deleted then all its rooms are delete as well
     topic = models.ForeignKey(Topic, on_delete =  models.SET_NULL, null = True)   # when the topic is deleted then all the rooms of that topic will be deleted as well
     updated = models.DateTimeField(auto_now=True)  # auto_now will update the time whenever the room is updated
     created = models.DateTimeField(auto_now_add=True)  # auto_now_add will update the time only when the room is created for the first time
@@ -42,6 +43,8 @@ class Message(models.Model):
     # THE RELATION OF ROOM TO MESSAGES WILL BE (ONE TO MANY)this is the foreign key that we will be using to connect the message with the room, on_delete=models.CASCADE means that if the room is deleted then the message will also be deleted
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    class Meta:                       # using this we can order the messages according to the most recent message
+        ordering = ['-updated','-created'] #So we do not have to write ordering syntax again and again in the views.py file for everytime we get the messages of the room
 
     def __str__(self):
         return self.body[:50] # this will return the first 50 characters of the message body

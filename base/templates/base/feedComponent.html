@@ -1,0 +1,25 @@
+{% for room in rooms %}    
+   {% if request.user == room.host %}  {% comment %} if the user registered, is Host of Room then, only then we will show him the UPDATE AND DELETE OPTIONS {% endcomment %}
+      <p><small><a href= "{% url 'update-room' room.id %}">Edit&nbsp;</a></small>
+      <small><a href= "{% url 'delete-room' room.id %}">Delete</a></small></p>
+   {% endif %}
+
+
+  <h3>
+     <a href = "{% url 'UserProfile' room.host.id %}"> @{{room.host.username}}</a>   
+     {% comment %} <div>{{room.id}} <span> --- </span> <a href= "/room/{{room.id}}">{{room.name}} </a></div>   {% endcomment %}
+     <div>{{room.id}} <span> --- </span> <a href= "{% url 'room' room.id%} ">{{room.name}} </a>
+     <small><sub>{{room.created|timesince}} ago</sub></small>
+     <br>
+
+     {% if room.description != ""%}
+        <small>"{{room.description}}"</small></div>  
+     {% endif%}
+    {% comment %} here we are giving a unique url to every room and every room has a unique id  {% endcomment %}
+     <small> @{{room.topic}} </small>
+     <hr>
+  </h3>
+
+{% endfor%}
+
+

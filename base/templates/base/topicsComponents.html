@@ -1,0 +1,12 @@
+
+<a href ="{% url 'home'%}"> <strong>Home</strong></a>
+{% for topic in topics %}
+<div>
+  
+ <a href = "{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a> {% comment %} # the value to search from search bar will replace q here  
+ we are using the url tag to create a url for the home page and we are passing the value of the topic.name as a query parameter {% endcomment %}
+
+  
+</div>
+
+{% endfor %}

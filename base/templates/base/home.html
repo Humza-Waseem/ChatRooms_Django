@@ -17,9 +17,9 @@
       <style>
         .mainbody{
           display:grid;
-          grid-template-columns:1fr 3fr;
+          grid-template-columns:1fr 3fr 1fr; {% comment %} this enables us to create two side bars with 1fr and a main body with 3fr {% endcomment %}
         }
-        
+
 
       </style>
 
@@ -28,12 +28,14 @@
 
       <h5>{% include "navbar.html" %}</h5>
       <hr>
+      <h3>
       {% if request.user.is_authenticated%}
           <a href = {% url 'UserLogout' %} >LogOut</a>
       {%else%}
           <a href = {% url 'UserLogin' %} >LogIN</a>  
           
       {%endif%}
+      </h3>
 
       
 
@@ -41,58 +43,31 @@
      <div class ="mainbody">
 
       <div class = "sideBar">
-        
         <h3> Browse Topics</h3>
         <hr>
-        <a href ="{% url 'home'%}"> <strong>Home</strong></a>
-        {% for topic in topics %}
-        <div>
-          
-         <a href = "{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a> {% comment %} # the value to search from search bar will replace q here  
-         we are using the url tag to create a url for the home page and we are passing the value of the topic.name as a query parameter {% endcomment %}
-
-          
-        </div>
-        
-        {% endfor %}
-
-
-
+       {% include "base/topicsComponents.html" %}{% comment %} we can declare a template in a different file and use it here using include tag and it will pass on the contextDictionary of the current template to the included template so that we can use the variables of the current template in the included template. 
+       This makes our code more modular and easy to understand and maintain.
+       {% endcomment %}
       </div>
       {% comment %} <h2>List of Rooms in base/HOME : </h2> {% endcomment %}
       <div> 
-
         {% if request.user.is_authenticated%}{% comment %} here we are checking if the user is authenticated then show the Welcome Message with user's name {% endcomment %}
         <H1>&nbsp; &nbsp; &nbsp; &nbsp; Welcome {{request.user}} !!!</H1>
-        {%endif%}
-
+        {% endif%}
 
         <a href= "{% url 'create-room'%}">Create a Room</a>
-
-        {% for room in rooms %}    
-          {% if request.user == room.host %}  {% comment %} if the user registered, is Host of Room then, only then we will show him the UPDATE AND DELETE OPTIONS {% endcomment %}
-          <p><small><a href= "{% url 'update-room' room.id %}">Edit&nbsp;</a></small>
-          <small><a href= "{% url 'delete-room' room.id %}">Delete</a></small></p>
-          {% endif %}
-          
-        <h3>
-          <small> @{{room.host.username}}</small>   {% comment %} here we are printing the username of the host of the room {% endcomment %}
-          {% comment %} <div>{{room.id}} <span> --- </span> <a href= "/room/{{room.id}}">{{room.name}} </a></div>   {% endcomment %}
-          <div>{{room.id}} <span> --- </span> <a href= "{% url 'room' room.id%} ">{{room.name}} </a>
-            <small><sub>{{room.created|timesince}} ago</sub></small>
-            <br>
-
-
-            <small>"{{room.description}}"</small></div>  
-           {% comment %} here we are giving a unique url to every room and every room has a unique id  {% endcomment %}
-          <small> {{room.topic}} </small>
-          <hr>
-
-          {%endfor%}
-        </h3>
+        {% include "base/feedComponent.html"%}   
   
       </div>
-     </div>
+
+      <div>
+        <h3>Recent Activities</h3>
+<hr>
+        {% include "base/activityComponent.html"%}
+
+      </div>
+      
+    </div>
     
     </body>
   </html>
