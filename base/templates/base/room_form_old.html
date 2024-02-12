@@ -1,0 +1,13 @@
+
+{% block content %}
+
+
+<div>
+    <form method = "POST" action ="">
+    {% csrf_token %}    {% comment %} # cross site request forgery  {% endcomment %}
+    {{form.as_p}}     {% comment %} # form.as_p is a shortcut for rendering each field as a paragraph {% endcomment %}
+    <input type = "submit" value = "Submit"/>
+    </form>
+</div>
+
+{% endblock content %}

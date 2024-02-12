@@ -1,0 +1,73 @@
+{% comment %} {% include "navbar.html" %} {% endcomment %}
+<h1>Room Template!!!!!! in base/room.html</h1>
+
+<style>
+.RoomBody{
+  display:grid;
+  grid-template-columns:3fr 1fr; {% comment %} this enables us to create two side bars with 1fr and a main body with 3fr {% endcomment %}
+}
+
+</style>
+ 
+
+<div> <a href = "{% url 'home'%}">  Home  </a></div>
+
+<div class = "RoomBody">
+
+  <div class = "RoomMainBox">
+    <small>@{{room.host}}</small>
+    <h2>{{room.id}}. {{room.name}}</h2>
+    <p>{{room.description}}</p>
+    <small>Topic: "{{room.topic}}"</small>
+
+
+
+    <hr>
+    <h3>CHAT: </h3>
+    {% for message in messages %}
+      <small>@{{message.user}} ({{message.created|timesince}} ago)</small> 
+
+
+      {% comment %} only edit and delete the message if the user is authenticated and the message is created by the user {% endcomment %}
+      {% if request.user.is_authenticated%}  
+      {% if message.user == request.user %}
+      <a href = "{% url 'delete-message' message.id%}"> Delete</a>
+      {% comment %} <a href = ""> Edit</a> {% endcomment %}
+      {% endif %} 
+      {% endif %}
+
+
+      <p>{{message.body}}</p>
+      <hr>
+    {% endfor %}
+
+
+    {% if request.user.is_authenticated%}  {% comment %} # if user is authenticated then only show the message box {% endcomment %}
+
+         <form method = "POST" action = "">
+             {% csrf_token %}
+             <input type="text" name="body" placeholder="Write Your Message here.......">
+             <br>
+             {% comment %} <input type="submit" value="Send"> {% endcomment %}
+         </form>
+
+      
+    {% endif %}
+  </div>
+
+  <div class = "RoomSideBar">
+
+    <h3>Participants</h3>
+    <hr>
+    {% for participant in participants %}
+      <small>@{{participant.username}}</small><br>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+
+
+
+

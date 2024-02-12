@@ -1,52 +1,51 @@
-<!doctype html>
-  <html lang="en">
-    <head>
-      <!-- Required meta tags -->
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="profile-page layout layout--3">
+    <div class="container">
+      <!-- Topics Start -->
+      {% include 'base/topicsComponents.html' %}
+      <!-- Topics End -->
   
-      <!-- Bootstrap CSS -->
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-     
-      <title>Profile</title>
-      <style>
-        .profile{
-          display:grid;
-          grid-template-columns:1fr 3fr 1fr; 
-        }
-        </style>
-    </head>
-    <body>
-    
-{% include 'main.html'%}
-{% include 'navbar.html'%}
-
-{% block content%}
-<div class = "profile">
-      
-      <div class = "room-container">
-      <h3> Browse By Topics</h3>
-        {% include "base/topicsComponents.html"%}
-
+      <!-- Room List Start -->
+      <div class="roomList">
+        <div class="profile">
+          <div class="profile__avatar">
+            <div class="avatar avatar--large active">
+              <img src="{{user.avatar.url}}" />
+            </div>
+          </div>
+          <div class="profile__info">
+            <h3>{{user.name}}</h3>
+            <p>@{{user.username}}</p>
+            {% if request.user == user %}
+            <a href="{% url 'update-user' %}" class="btn btn--main btn--pill">Edit Profile</a>
+            {% endif %}
+          </div>
+          <div class="profile__about">
+            <h3>Abouuuttt</h3>
+            <p>
+              {{user.bio}}
+                
+            </p>
+          </div>
+        </div>
+  
+        <div class="roomList__header">
+          <div>
+            <h2>Study Rooms hosted by {{user.username}}</a>
+            </h2>
+          </div>
+        </div>
+        {% include 'base/feedComponent.html' %}
+  
+  
       </div>
-
-      <div class = "">
-      <h3>Rooms</h3>
-        {% include 'base/feedComponent.html'%}
-
-      </div>
-
-      <div class = "">
-        <h3>Recent Activities</h3>
-        <hr>
-        {% include 'base/activityComponent.html' %}
-
-      </div>
-
-
-
-</div>
-
-{% endblock content%}
-</body>
-</html>
+      <!-- Room List End -->
+  
+      <!-- Activities Start -->
+      {% include 'base/activityComponent.html' %}
+      <!-- Activities End -->
+    </div>
+  </main>
+  {% endblock content %}

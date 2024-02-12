@@ -15,7 +15,7 @@ def UserLogout(request):  # creating this view to so that
     logout(request)   # user presses the logout button then its session will be deleted from the database
     return redirect('home')   # and the user is redirected to the home page..
 
-def registerUser(request):
+def registerUser(request):  
     # page = 'register' 
     form = UserCreationForm()
     if request.method == 'POST':
@@ -62,6 +62,8 @@ def UserLogin(request):
 #     {'id': 3, 'name': 'Frontend Development'},
 # ]
 
+
+
 def home(request):
     
     q = request.GET.get('q') if( request.GET.get('q') != None) else ''  # getting the query from the search bar and if it is not there then set it to empty string
@@ -77,13 +79,13 @@ def home(request):
 
     topics = Topic.objects.all()
     UserMessages = Message.objects.filter(  Q(room__topic__name__icontains = q))  # filtering the messages according to the topic name
-
-    context = { 'rooms': rooms,'topics':topics,'UserMessages':UserMessages}
+    room_count = rooms.count()  # getting the count of the rooms
+    context = { 'rooms': rooms,'topics':topics,'UserMessages':UserMessages,"room_count": room_count}
 
     return render(request, 'base/home.html', context    )   #  we passed the rooms named dictionary to the home.html page ..  The first 'rooms' is the variable name that we will use in the html page and the second 'rooms' is the dictionary name that we created above(the dictionary that we are passing on by render function to the home.html page)
 
 @login_required(login_url="UserLogin") 
-def userProfile(request,pk):
+def UserProfile(request,pk):
     user = User.objects.get(id = pk)
     rooms = user.room_set.all()  # getting all the rooms of the user
     topics = Topic.objects.all()
@@ -112,7 +114,7 @@ def room(request,pk):
     # for i in rooms:
     #     if i['id'] == int(pk):
     #         room = i
-    context = { 'room': room,'messages':UserMessages,'participants':participants}
+    context = { 'room': room,'UserMessages':UserMessages,'participants':participants}
     
 
     return render(request, 'base/room.html',context)   ## using render function to render the room.html page
@@ -121,28 +123,52 @@ def room(request,pk):
 @login_required(login_url="UserLogin")     # login will be required to access this page
 def CreateRoom(request):
     form = RoomForm()   # This line creates an instance of the RoomForm class.
-    if request.method =='POST':   # This line checks if the HTTP request method is 'POST'
-        form = RoomForm(request.POST)  #  passing all the values into the form ,, adding the date to form
-        if form.is_valid():   # this check if all the form submitted values are valid
-            form.save()   ## saving the form
-            return redirect('home')    # here we redirect the user (who submit the form) to the listed Page(home) note that we are using the Name of the 'HOME' html file which we declared in the urls. 
+    topics = Topic.objects.all( )          # Getting all the topics from the database
 
-    context = {'form':form}
+    if request.method =='POST':   # This line checks if the HTTP request method is 'POST'
+        topic_name = request.POST.get('topic')  # getting the topic name from the form
+        topic, created = Topic.objects.get_or_create(name=topic_name)  # getting the topic from the database if it is already there otherwise create the topic
+        Room.objects.create(  # creating the room object
+            host = request.user,  # the host will be the user who is logged in
+            topic = topic,        # the topic will be the topic that we got from the form
+            name = request.POST.get('name'),  # getting the name of the room from the form
+            description = request.POST.get('description'),  # getting the description of the room from the form
+        )
+        # form = RoomForm(request.POST)  #  passing all the values into the form ,, adding the date to form
+        # if form.is_valid():   # this check if all the form submitted values are valid
+
+        #     room = form.save(commit= False)  # here we save the form, getting the instance of the form 
+        #     room.host = request.user
+            
+            # room.save()
+              
+        return redirect('home')    # here we redirect the user (who submit the form) to the listed Page(home) note that we are using the Name of the 'HOME' html file which we declared in the urls. 
+
+    context = {'form':form,'topics':topics}
     return render(request,'base/room_form.html',context)
 
 @login_required(login_url="UserLogin")
 def UpdateRoom(request,pk):  # here we get the pk also to update the specific room
     room = Room.objects.get(id = pk)  # getting the room with the specific id
     form = RoomForm(instance= room)  # here we get the instance of the room that we want to update. THis will also show  the data of the room that we want to update in the form fields... so it would be easy for update keeping in view the previous data
+    topics = Topic.objects.all()  # getting all the topics from the database
     if request.user != room.host:
         return HttpResponse("You are not allowed to Edit this page")
     
+    # if request.method == 'POST':
+    #     form = RoomForm(request.POST, instance= room)  # Updating the form according to the the room.  The instance=room tells the request to update the attributes.. if we do not do this then django will simply make another room with our updated values
+
     if request.method == 'POST':
-        form = RoomForm(request.POST, instance= room)  # Updating the form according to the the room.  The instance=room tells the request to update the attributes.. if we do not do this then django will simply make another room with our updated values
-        if form.is_valid():
-            form.save()
-            return redirect('home')  # going back to the home page 
-    context = {'form':form}
+        topic__name = request.POST.get('topic')
+        topic,created = Topic.objects.get_or_create(name=topic__name)
+        room.name= request.POST.get('name')
+        room.topic = topic
+        room.description = request.POST.get('description')
+        room.save()
+        # if form.is_valid():
+        #     form.save()
+        return redirect('home')  # going back to the home page 
+    context = {'form':form,'topics': topics,'room':room}
 
     return render(request,'base/room_form.html',context)
 
@@ -171,3 +197,13 @@ def DeleteMessage(request,pk):
     context = {'obj':messages} 
     
     return render(request,'base/delete.html',context)
+
+
+def topicsPage(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    topics = Topic.objects.filter(name__icontains=q)
+    return render(request, 'base/topics.html', {'topics': topics})
+
+def activityPage(request):
+    room_messages = Message.objects.all()
+    return render(request, 'base/activity.html', {'room_messages': room_messages})

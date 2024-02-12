@@ -1,0 +1,52 @@
+{% comment %} <!doctype html>
+  <html lang="en">
+    <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+     
+      <title>Profile</title>
+      <style>
+        .profile{
+          display:grid;
+          grid-template-columns:1fr 3fr 1fr; 
+        }
+        </style>
+    </head>
+    <body> {% endcomment %}
+    
+{% include 'main.html'%}
+{% include 'navbar.html'%}
+
+{% block content%}
+<div class = "profile">
+      
+      <div class = "room-container">
+      <h3> Browse By Topics</h3>
+        {% include "base/topicsComponents.html"%}
+
+      </div>
+
+      <div class = "">
+      <h3>Rooms</h3>
+        {% include 'base/feedComponent.html'%}
+
+      </div>
+
+      <div class = "">
+        <h3>Recent Activities</h3>
+        <hr>
+        {% include 'base/activityComponent.html' %}
+
+      </div>
+
+
+
+</div>
+
+{% endblock content%}
+</body>
+{% comment %} </html> {% endcomment %}
