@@ -2,12 +2,14 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import Room,Topic,Message   # importing the Room and Topic and Message models from models which is in the same directory
 from django.contrib import messages  # importing the flash messages 
-from .Forms import RoomForm  
+
+from .Forms import RoomForm , UserForm  # importing the RoomForm  and UserFOrm from the Forms.py file which is in the same directory
 from django.contrib.auth import authenticate,login,logout  
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q  # here we get Q because it will help us to insert query operations AND,OR,NOT
+
 
 
 
@@ -22,7 +24,7 @@ def registerUser(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = user.username.lower()
+            user.username = user.username
             user.save()
             login(request,user)
             return redirect('home')
@@ -38,7 +40,7 @@ def UserLogin(request):
         return redirect('home') # and rediredct the user to the home page because uer is already logged in
     
     if request.method == "POST":  
-        username = request.POST.get('username').lower() # getting the username from the login form in lowercase
+        username = request.POST.get('username') # getting the username from the login form in lowercase
         password = request.POST.get('password')  # getting the password from the login form
         
         try:
@@ -93,6 +95,20 @@ def UserProfile(request,pk):
 
     context = {"user": user,"rooms":rooms , "topics":topics , "UserMessages":UserMessages}
     return render(request,'base/userProfile.html',context)
+
+
+@login_required(login_url="UserLogin") 
+def UpdateUser(request):
+    form = UserForm(instance = request.user)
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance = request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('UserProfile',pk = request.user.id)
+
+    context= {"form":form}
+    return render(request,'base/UpdateUser.html',context)
+
 
 def room(request,pk):     
     room = Room.objects.get(id = pk)

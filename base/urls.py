@@ -8,6 +8,7 @@ urlpatterns  = [
     path('logout/'   ,views.UserLogout,name = "UserLogout"),
     path('register/' , views.registerUser,name = 'register'),
     path('', views.home, name='home'), # the path() function takes 3 arguments: 1st is the url, 2nd is the view function, 3rd is the name of the url  #  the name is optional, but it is good to use it
+    path('Update-User', views.UpdateUser, name='UpdateUser'),
 
     path('room/<str:pk>/',views.room, name ="room"),   # 'pk' stands for Primary Key  and it is set as string.......
     path('UserProfile/<str:pk>',views.UserProfile, name = "UserProfile"),  # url of the user profile page

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User    # this is a django built in model that we will be using to connect the room with the user
 
 
 

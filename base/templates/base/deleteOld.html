@@ -1,0 +1,12 @@
+{% include "main.html" %}
+{% block content%}
+
+<div  class = "DeleteForm">
+    <form method = "POST" action = "">
+      {% csrf_token %}
+      <p> Are you sure you want to delete "{{obj}}"? </p> <br>  {% comment %} using obj here to make it a universal delete   template  {% endcomment %}
+      <a href = "{{request.META.HTTP_REFERER}}"> Go Back</a>  {% comment %} going back to the previous page if not Confirm {% endcomment %}
+      <input type ="submit" value = "Confirm" , name = "ConfirmButton">
+    </form>
+</div>
+{%endblock content%}  

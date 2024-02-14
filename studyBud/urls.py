@@ -12,9 +12,8 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('room/', room),
-    path('', include ("base.urls") )
-    # path("", home),
-    # path('', include('base.urls'))
+    path('', include ("base.urls") ),
+    path('api/', include ("base.api.urls") ),# any url that starts with 'api/' will be redirected to the urls.py file in the base/api directory
+    
     
 ]

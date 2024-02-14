@@ -1,0 +1,35 @@
+{% include "main.html" %}
+
+
+{%if page == 'login' %}
+<div> 
+    <form method = "POST" action ="">
+        {% csrf_token %}
+        <label>UserName:</label>
+        <input type = "text" name="username" placeholder = "Enter Username"/>
+        <label>Password:</label>
+        <input type = "password" name="password" placeholder = "Enter Password"/>
+        
+        <input type ="submit" name = "Login">
+    </form>
+    <p>haven't signed up yet?</p>
+    <a href = "{%url 'register'%}">SIgn UP </a>
+        
+</div>
+
+
+{%else%}   
+{% comment %} For Registering the User if it is not already in the data base {% endcomment %}
+<div>
+    <form method = "POST" action ="">
+        {% csrf_token %}
+        
+        <input type ="submit" name = "register">
+        {{form.as_p}} {% comment %} here we are creating the form for registering the user  {% endcomment %}
+    </form>
+    <p> Already signed up ?</p> 
+
+    <a href = "{%url 'UserLogin' %}">Login</a>
+   
+</div>
+{%endif%}

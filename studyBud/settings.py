@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "base.apps.BaseConfig", # we have added this app to the installed apps. This is the app that we have created.
-    
+    'rest_framework',  
 ]
 
 MIDDLEWARE = [
