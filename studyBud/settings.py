@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "base.apps.BaseConfig", # we have added this app to the installed apps. This is the app that we have created.
+    "base.apps.BaseConfig", # we have added this app(Base) to the installed apps. This is the app that we have created.
     'rest_framework',  
 ]
 

@@ -17,11 +17,16 @@ def getRoutes(request):
     #return JsonResponse(routes, safe=False)  # here we are returning the response in the form of json, The JSON response will convert the data in the view into JSON data. Safe = False allow us to use data other than the python dictionaries in our response. 
 
 @api_view(['GET'])
-def getRooms(request):
-    rooms = Room.objects.all()
-    serializer = RoomSerializer(rooms, many=True) # here we are using the RoomSerializer to convert the rooms object into a JSON object. The many=True argument is used to specify that we are serializing a queryset, not a single instance... many = True is use to serialize multiple objects
+def getRooms(request,pk):
+    # rooms = Room.objects.all()
+    # serializer = RoomSerializer(rooms, many=True) # here we are using the RoomSerializer to convert the rooms object into a JSON object. The many=True argument is used to specify that we are serializing a queryset, not a single instance... many = True is use to serialize multiple objects
    
-    # here we are passing the rooms object to the Response... The response can't take python objects as arguments, so we have to convert the rooms object into a dictionary using the serializer...
-    return Response(serializer.data)  
+    # # here we are passing the rooms object to the Response... The response can't take python objects as arguments, so we have to convert the rooms object into a dictionary using the serializer...
+    # return Response(serializer.data)
+
+    room = Room.objects.get(id = pk)
+    serializer = RoomSerializer(room, many=False)
+    return Response(serializer.data)  # here we are passing the room object to the Response... The response can't take python objects as arguments, so we have to convert the room object into a dictionary using the serializer...
+  
 
 
