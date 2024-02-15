@@ -124,10 +124,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+
+STATIC_URL = '/static/'
+MEDIA_URL = '/images/'
+
 STATICFILES_DIRS=  [
-    BASE_DIR / 'static'
+    BASE_DIR /  'static'
 ]
+
+MEDIA_ROOT =   BASE_DIR / 'static/images'  
+      # this is for the media that a user uploads... A user can upload a dp or any picture in chat and all pics will go to this directory
+    
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -141,3 +148,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     BASE_DIR / "static", # we add the files that are not private. and anyone can acess that.
     
 # ]
+
+
+
+AUTH_USER_MODEL ='base.User'   # here we are specifying the custom user model that we have created in the base app. This is the user model that we will be using for the authentication of the users. We have to specify this in the settings.py file so that Django knows that we are using a custom user model for the authentication of the users. If we do not specify this, Django will use the default user model for the authentication of the users. First we used the default user model so we didn't had to specify it in the settings.......

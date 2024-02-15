@@ -1,6 +1,6 @@
 from django.forms import ModelForm
-from .models import Room
-from django.contrib.auth.models import User   #importing the user model from the django built in models
+from .models import Room,User
+# from django.contrib.auth.models import User   #importing the user model from the django built in models
 
 class UserForm(ModelForm):  #creating a class that inherits properties from the ModelForm class,,,, We will use it in the UpdateUser View.. To make a form that will include all the fields of the user model.
     class Meta:

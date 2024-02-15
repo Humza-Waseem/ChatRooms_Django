@@ -1,11 +1,11 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Room,Topic,Message   # importing the Room and Topic and Message models from models which is in the same directory
+from .models import Room,Topic,Message,User   # importing the Room and Topic and Message models from models which is in the same directory
 from django.contrib import messages  # importing the flash messages 
 
 from .Forms import RoomForm , UserForm  # importing the RoomForm  and UserFOrm from the Forms.py file which is in the same directory
 from django.contrib.auth import authenticate,login,logout  
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q  # here we get Q because it will help us to insert query operations AND,OR,NOT

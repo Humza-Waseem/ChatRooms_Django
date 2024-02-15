@@ -1,9 +1,24 @@
 from django.db import models
-from django.contrib.auth.models import User    # this is a django built in model that we will be using to connect the room with the user
+from django.contrib.auth.models import  AbstractUser
+# from django.contrib.auth.models import User    # this is a django built in model that we will be using to connect the room with the user
 
 
+class User(AbstractUser):
+    # pass   # we use pass when we do not want to write anything in the class
+    username = models.CharField(max_length=100, unique=True)
+    email = models.EmailField(max_length=200, unique=True)
+    headline = models.CharField(max_length=200, null = True, blank = True)
+    date_joined = models.DateTimeField(auto_now_add=True,null = True)
+    last_login = models.DateTimeField(auto_now=True,null = True)
 
-# Create your models here.
+    Pfp = models.ImageField(default= 'images/avatar.svg',null=True)  # using pip install Pillow to install the pillow library to use the ImageField
+   
+
+    USERNAME_FIELD = 'email' # specifying the email as the username field helps us to login using the email instead of the username, which django use username by default for the authentication of the users(login and signup)
+    REQUIRED_FIELDS = []
+
+   
+# # Create your models here.
 
 ##  This is the model for the topic that we will be creating
 class Topic(models.Model):

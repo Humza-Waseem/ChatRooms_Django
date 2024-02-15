@@ -17,13 +17,15 @@
         <form class="form" action="" method="POST">
           {% csrf_token %}
           <div class="form__group form__group">
-            <label for="room_name">Email</label>
-            <input id="username" name="username" type="text" placeholder="Enter UserName" />
+            <label for="room_name">Email Address</label>
+            <input id="email" name="email" type="Email" placeholder="Email Address" />
           </div>
           <div class=" form__group">
             <label for="password">Password</label>
             <input id="password" name="password" type="password"
-              placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+             {% comment %} placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"  {% endcomment %}
+              placeholder = "Password" />
+                
           </div>
 
           <button class="btn btn--main" type="submit">
