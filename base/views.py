@@ -19,9 +19,11 @@ def UserLogout(request):  # creating this view to so that
 
 def registerUser(request):  
     # page = 'register' 
-    form = UserCreationForm()
+    # form = UserCreationForm()
+    form = MyUserCreationForm()
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        # form = UserCreationForm(request.POST)
+        form = MyUserCreationForm(request.POST)   # using MyUserCreationForm because it has our custom user model form
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username
@@ -40,20 +42,20 @@ def UserLogin(request):
         return redirect('home') # and rediredct the user to the home page because uer is already logged in
     
     if request.method == "POST":  
-        username = request.POST.get('username') # getting the username from the login form in lowercase
+        email = request.POST.get('email') # getting the email from the login form in lowercase
         password = request.POST.get('password')  # getting the password from the login form
         
         try:
-            user = User.objects.get(username=username) # getting the user with the specific username
+            user = User.objects.get(email=email) # getting the user with the specific username
         except:
-            messages.error(request,"UserName does not exist")
+            messages.error(request,"email does not exist")
         
-        user = authenticate(request,username =username,password= password )
+        user = authenticate(request,email =email,password= password )
         if user is not None:
             login(request,user)
             return redirect('home')
         else:
-            messages.error(request,"Username or Password is incorrect")
+            messages.error(request,"email or Password is incorrect")
 
     context={'page':page}
     return render(request,'base/UserLogin.html',context)
@@ -111,7 +113,7 @@ def UpdateUser(request):
 
 
 def room(request,pk):     
-    room = Room.objects.get(id = pk)
+    room = Room.objects.get(id = pk) 
     UserMessages = room.message_set.all()  # getting all the messages of the room and ordering them according to the most recent message  ( It is a "1 to many relationship" so we can use the message_set to get all the messages of the room)
     participants = room.participants.all()  # getting all the participants of the room
 
