@@ -126,13 +126,13 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/images/'
+MEDIA_URL = '/images/media/'
 
 STATICFILES_DIRS=  [
     BASE_DIR /  'static'
 ]
 
-MEDIA_ROOT =   BASE_DIR / 'static/images'  
+MEDIA_ROOT =   BASE_DIR / 'static/images/media/'  
       # this is for the media that a user uploads... A user can upload a dp or any picture in chat and all pics will go to this directory
     
 

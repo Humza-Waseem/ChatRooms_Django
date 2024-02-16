@@ -18,7 +18,9 @@
         </div>
       </div>
       <div class="layout__body">
-        <form class="form" action="" method="POST" enctype="multipart/form-data">
+        <form class="form" action="" method="POST" enctype="multipart/form-data">   
+          <!-- setting the enctype  to multipart/form-data is necessary for file uploads In a form. It tells django that a user is submitting some Files in the form along with other Fields 
+          ALSO WE WRITE THE REQUEST.FILES IN THE VIEW TO PROCESS THE FILES OPLOAD IN A FORM -->
           {% csrf_token %}
 
           {% for field in form %}
