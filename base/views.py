@@ -25,7 +25,7 @@ def registerUser(request):
         # form = UserCreationForm(request.POST)
         form = MyUserCreationForm(request.POST)   # using MyUserCreationForm because it has our custom user model form
         if form.is_valid():
-            user = form.save(commit=False)
+            user = form.save(commit=False)#commit = False means that we are not saving the form yet
             user.username = user.username
             user.save()
             login(request,user)

@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from .models import Room,User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm #importing the UserCreationForm from the django built in forms. This form will be used to create a form for the user model, 
+
 # from django.contrib.auth.models import User   #importing the user model from the django built in models
 
 class MyUserCreationForm(UserCreationForm):   #  creating a class that inherits properties from the UserCreationForm class,,,, We will 
