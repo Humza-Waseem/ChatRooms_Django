@@ -1,6 +1,6 @@
 Django>=3.2,<4.0
 djangorestframework>=3.12
-psycopg2>=2.9  # If using PostgreSQL
+psycopg2-binary>=2.9  # Use binary version for easier installation
 mysqlclient>=2.0  # If using MySQL
 pillow>=8.4  # For image handling
 django-cors-headers>=3.10  # For handling CORS
