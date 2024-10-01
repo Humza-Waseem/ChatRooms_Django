@@ -1,0 +1,9 @@
+Django>=3.2,<4.0
+djangorestframework>=3.12
+psycopg2>=2.9  # If using PostgreSQL
+mysqlclient>=2.0  # If using MySQL
+pillow>=8.4  # For image handling
+django-cors-headers>=3.10  # For handling CORS
+django-environ>=0.8  # For environment variable management
+celery>=5.1  # If using Celery for asynchronous tasks
+redis>=4.0  # If using Redis as a broker for Celery
